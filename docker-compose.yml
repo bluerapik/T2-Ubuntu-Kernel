@@ -1,0 +1,45 @@
+# version: "3.8"
+
+services:
+  focal:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+      args:
+        BASE_IMAGE: ubuntu:20.04
+    image: kernel:focal
+    pull_policy: never
+    container_name: kernel-focal
+    working_dir: /repository
+    volumes:
+      - ./:/repository
+  jammy:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+      args:
+        BASE_IMAGE: ubuntu:22.04
+    image: kernel:jammy
+    pull_policy: never
+    container_name: kernel-jammy
+    working_dir: /repository
+    volumes:
+      - ./:/repository
+    depends_on:
+      focal:
+        condition: service_completed_successfully
+  noble:
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+      args:
+        BASE_IMAGE: ubuntu:24.04
+    image: kernel:noble
+    pull_policy: never
+    container_name: kernel-noble
+    working_dir: /repository
+    volumes:
+      - ./:/repository
+    depends_on:
+      jammy:
+        condition: service_completed_successfully
